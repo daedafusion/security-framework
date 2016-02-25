@@ -48,7 +48,7 @@
             <dependency>
                 <groupId>com.daedafusion</groupId>
                 <artifactId>service-framework-core</artifactId>
-                <version>1.0</version>
+                <version>1.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.daedafusion</groupId>
