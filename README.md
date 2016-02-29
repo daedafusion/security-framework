@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/daedafusion/service-framework.svg?branch=master)](https://travis-ci.org/daedafusion/service-framework)
 
+[![Coverage Status](https://coveralls.io/repos/github/daedafusion/security-framework/badge.svg?branch=master)](https://coveralls.io/github/daedafusion/security-framework?branch=master)
+
 # security-framework
 Pluggable security framework "inspired" by the OWASP ESAPI framework 
 
