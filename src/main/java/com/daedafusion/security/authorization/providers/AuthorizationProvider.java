@@ -6,6 +6,7 @@ import com.daedafusion.security.authorization.ResourceActionContext;
 import com.daedafusion.security.common.Context;
 import com.daedafusion.security.decision.Decision;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import java.util.List;
 public interface AuthorizationProvider extends Provider
 {
     Decision getAccessDecision(Subject subject, URI resource, String action, Context context);
+
+    Decision getAccessDecision(Subject subject, HttpServletRequest request, Context context);
 
     Decision[] getAccessDecisionSet(Subject subject, List<ResourceActionContext> resourceActionContext);
 }
