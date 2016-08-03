@@ -10,6 +10,7 @@ import com.daedafusion.security.decision.Decision;
 import com.daedafusion.security.obligation.Obligation;
 import org.apache.log4j.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.List;
 
@@ -52,6 +53,20 @@ public class AlwaysPermitAuthorizationProvider extends AbstractProvider implemen
 
     @Override
     public Decision getAccessDecision(Subject subject, URI resource, String action, Context context)
+    {
+        Decision d = new Decision(AlwaysPermitAuthorizationProvider.class.getName());
+
+        Obligation loggingObligation = new Obligation(URI.create("obligation:logging"), Obligation.Fulfillment.ON_PERMIT);
+
+        d.getObligations().add(loggingObligation);
+
+        d.setResult(Decision.Result.PERMIT);
+
+        return d;
+    }
+
+    @Override
+    public Decision getAccessDecision(Subject subject, HttpServletRequest request, Context context)
     {
         Decision d = new Decision(AlwaysPermitAuthorizationProvider.class.getName());
 

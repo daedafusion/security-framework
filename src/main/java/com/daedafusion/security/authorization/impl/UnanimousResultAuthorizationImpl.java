@@ -13,6 +13,7 @@ import com.daedafusion.security.obligation.Obligation;
 import com.daedafusion.security.obligation.ObligationHandler;
 import org.apache.log4j.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,56 @@ public class UnanimousResultAuthorizationImpl extends AbstractService<Authorizat
         Context obContext = new DefaultContext();
         obContext.addContext("auth:resource", resource.toString());
         obContext.addContext("auth:action", action);
+
+        for(String k : context.getKeys())
+        {
+            obContext.putContext(k, context.getContext(k));
+        }
+
+        if (result.getResult().equals(Decision.Result.PERMIT))
+        {
+            for (Obligation ob : result.getObligations())
+            {
+                if (ob.getFulfillment().equals(Obligation.Fulfillment.ON_PERMIT))
+                {
+                    handler.handle(ob, obContext);
+                }
+            }
+
+            return true;
+        }
+        else
+        {
+            for (Obligation ob : result.getObligations())
+            {
+                if(ob.getFulfillment().equals(Obligation.Fulfillment.ON_DENY))
+                {
+                    handler.handle(ob, obContext);
+                }
+            }
+
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isAuthorized(Subject subject, HttpServletRequest request, Context context)
+    {
+        List<Decision> decisions = new ArrayList<>();
+
+        for (AuthorizationProvider provider : getProviders())
+        {
+            decisions.add(provider.getAccessDecision(subject, request, context));
+        }
+
+        UnanimousResultCombiner<Decision> combiner = new UnanimousResultCombiner<>();
+
+        Decision result = combiner.getCombinedResult(decisions);
+
+        ObligationHandler handler = getServiceRegistry().getService(ObligationHandler.class);
+
+        Context obContext = new DefaultContext();
+        obContext.addContext("auth:request", request.toString());
 
         for(String k : context.getKeys())
         {

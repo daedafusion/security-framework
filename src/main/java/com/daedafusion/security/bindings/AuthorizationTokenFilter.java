@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * Created by mphilpot on 7/11/14.
@@ -35,17 +36,22 @@ public class AuthorizationTokenFilter implements Filter
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
         // Handle excludes
-        String authorizationExcludes = Configuration.getInstance().getString("authorizationFilter.pathExclude", "");
-        String[] paths = authorizationExcludes.split(":");
+        String authorizationExcludes = Configuration.getInstance().getString("authorizationFilter.pathExclude", null);
 
-        String path = httpServletRequest.getRequestURI();
-
-        for(String p : paths)
+        if(authorizationExcludes != null)
         {
-            if(path.startsWith(p))
+            String[] paths = authorizationExcludes.split(":");
+
+            String path = httpServletRequest.getRequestURI();
+
+            for (String p : paths)
             {
-                chain.doFilter(request, response);
-                return;
+                if (path.startsWith(p))
+                {
+                    log.info(String.format("Request %s excluded from authorization", path));
+                    chain.doFilter(request, response);
+                    return;
+                }
             }
         }
 
@@ -54,6 +60,9 @@ public class AuthorizationTokenFilter implements Filter
         try
         {
             TokenExchange tokenExchange = framework.getService(TokenExchange.class);
+
+            // Strip "Bearer " if present
+            authorizationToken = authorizationToken.replaceAll("(?i)"+ Pattern.quote("Bearer "), "");
 
             Token token = tokenExchange.getToken(authorizationToken);
             Subject subject = tokenExchange.exchange(token);

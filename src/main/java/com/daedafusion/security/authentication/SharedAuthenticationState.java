@@ -29,9 +29,10 @@ public final class SharedAuthenticationState
         state.put(key, value);
     }
 
-    public Object getState(String key)
+    @SuppressWarnings("unchecked")
+    public <T> T getState(String key)
     {
-        return state.get(key);
+        return (T) state.get(key);
     }
 
     public boolean hasState(String key)
