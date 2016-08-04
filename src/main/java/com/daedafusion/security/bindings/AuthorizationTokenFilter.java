@@ -1,6 +1,7 @@
 package com.daedafusion.security.bindings;
 
 import com.daedafusion.configuration.Configuration;
+import com.daedafusion.security.exceptions.UnauthorizedException;
 import com.daedafusion.sf.ServiceFramework;
 import com.daedafusion.sf.ServiceFrameworkException;
 import com.daedafusion.sf.ServiceFrameworkFactory;
@@ -12,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
@@ -34,6 +36,7 @@ public class AuthorizationTokenFilter implements Filter
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
     {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
         // Handle excludes
         String authorizationExcludes = Configuration.getInstance().getString("authorizationFilter.pathExclude", null);
@@ -57,6 +60,12 @@ public class AuthorizationTokenFilter implements Filter
 
         String authorizationToken = httpServletRequest.getHeader("Authorization");
 
+        if(authorizationToken == null)
+        {
+            httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+
         try
         {
             TokenExchange tokenExchange = framework.getService(TokenExchange.class);
@@ -69,24 +78,25 @@ public class AuthorizationTokenFilter implements Filter
 
             if(subject == null)
             {
-                throw new ServletException(String.format("Token (%s) did not map to subject", authorizationToken));
+                httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
 
             LocalSubjectStorage.set(subject);
+
+            // Valid Subject -- execute request
+            chain.doFilter(request, response);
         }
         catch (ServiceFrameworkException e)
         {
             log.error("Framework error", e);
-            // TODO return 500 error
-            throw new ServletException("Framework error");
+            httpServletResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         catch (InvalidTokenException e)
         {
             log.error("Invalid Token", e);
-            throw new ServletException("Invalid token");
+            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token");
         }
-
-        chain.doFilter(request, response);
     }
 
     @Override
