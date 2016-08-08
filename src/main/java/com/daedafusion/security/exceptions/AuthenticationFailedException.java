@@ -8,4 +8,9 @@ import org.apache.log4j.Logger;
 public class AuthenticationFailedException extends Exception
 {
     private static final Logger log = Logger.getLogger(AuthenticationFailedException.class);
+
+    public AuthenticationFailedException(String msg)
+    {
+        super(msg);
+    }
 }

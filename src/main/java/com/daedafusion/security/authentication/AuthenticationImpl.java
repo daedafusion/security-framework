@@ -127,7 +127,7 @@ public class AuthenticationImpl extends AbstractService<AuthenticationProvider> 
                 ap.abort(sessions.get(ap.getAuthority()));
             }
 
-            throw new AuthenticationFailedException();
+            throw new AuthenticationFailedException("Authentication Failed");
         }
     }
 

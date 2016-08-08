@@ -51,7 +51,7 @@ public class AuthorizationTokenFilter implements Filter
             {
                 if (path.startsWith(p))
                 {
-                    log.info(String.format("Request %s excluded from authorization", path));
+                    log.debug(String.format("Request %s excluded from authorization", path));
                     chain.doFilter(request, response);
                     return;
                 }
