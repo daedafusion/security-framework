@@ -5,6 +5,7 @@ import com.daedafusion.security.authentication.Principal;
 import org.apache.log4j.Logger;
 
 import java.util.*;
+import java.util.function.BooleanSupplier;
 
 /**
  * Created by mphilpot on 7/15/14.
@@ -15,12 +16,16 @@ public class DefaultAuthenticatedPrincipal extends AbstractPrincipal implements 
 
     private Set<Principal> associations;
     private Map<String, String> context;
+    private BooleanSupplier isValid;
 
-    public DefaultAuthenticatedPrincipal(UUID instanceId, Type type, Map<String, Set<String>> attributes, String signature)
+    public DefaultAuthenticatedPrincipal(UUID instanceId, Type type,
+                                         Map<String, Set<String>> attributes, String signature,
+                                         BooleanSupplier isValid)
     {
         super(instanceId, type, attributes, signature);
         associations = new HashSet<>();
         context = new HashMap<>();
+        this.isValid = isValid;
     }
 
     @Override
@@ -85,5 +90,11 @@ public class DefaultAuthenticatedPrincipal extends AbstractPrincipal implements 
     public String getContext(String key)
     {
         return context.get(key);
+    }
+
+    @Override
+    public boolean isValid()
+    {
+        return isValid.getAsBoolean();
     }
 }

@@ -1,18 +1,30 @@
 package com.daedafusion.security.authentication;
 
-import com.daedafusion.security.exceptions.InvalidTokenException;
+import java.util.List;
 
 /**
  * Created by mphilpot on 7/11/14.
  */
 public interface TokenExchange
 {
-    Subject exchange(Token token);
-    Token exchange(Subject subject);
+    /**
+     *
+     * @param tokens array of tokens
+     * @return valid subject if the exchange could be performed, null otherwise
+     */
+    Subject exchange(Token... tokens);
 
-    Token getToken(String tokenString) throws InvalidTokenException;
+    /**
+     *
+     * @param subject
+     * @return Token list
+     */
+    List<Token> exchange(Subject subject);
 
-    boolean isTokenValid(Token token);
-
-    void destroyToken(Token token);
+    /**
+     *
+     * @param token
+     * @return true if successful, false otherwise
+     */
+    boolean destroyToken(Token token);
 }

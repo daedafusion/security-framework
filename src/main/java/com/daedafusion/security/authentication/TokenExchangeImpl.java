@@ -2,10 +2,10 @@ package com.daedafusion.security.authentication;
 
 import com.daedafusion.sf.AbstractService;
 import com.daedafusion.security.authentication.providers.TokenExchangeProvider;
-import com.daedafusion.security.exceptions.InvalidTokenException;
 import org.apache.log4j.Logger;
 
-import java.util.Collections;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by mphilpot on 7/15/14.
@@ -15,78 +15,34 @@ public class TokenExchangeImpl extends AbstractService<TokenExchangeProvider> im
     private static final Logger log = Logger.getLogger(TokenExchangeImpl.class);
 
     @Override
-    public Subject exchange(Token token)
+    public Subject exchange(Token... tokens)
     {
-        for(TokenExchangeProvider tep : getProviders())
+        Set<AuthenticatedPrincipal> aps = Arrays.stream(tokens)
+                .flatMap(token -> getProviders().stream().flatMap(tep -> tep.exchange(token).stream()))
+                .collect(Collectors.toSet());
+
+        if(!aps.isEmpty())
         {
-            if(tep.canExchange(token))
-            {
-                AuthenticatedPrincipal ap = tep.exchange(token);
-
-                return new Subject(Collections.singleton(ap));
-            }
+            return new Subject(aps);
         }
-
-        return null;
+        else
+        {
+            return null;
+        }
     }
 
     @Override
-    public Token exchange(Subject subject)
+    public List<Token> exchange(Subject subject)
     {
-        // This is broken with multiple principals!!  TODO
-        for(TokenExchangeProvider tep : getProviders())
-        {
-            Token token = tep.exchange(subject);
-
-            if(token != null)
-            {
-                return token;
-            }
-        }
-
-        return null;
+        return subject.getPrincipals().stream()
+                .flatMap(ap -> getProviders().stream().map(tep -> tep.exchange(ap)))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Token getToken(String tokenString) throws InvalidTokenException
+    public boolean destroyToken(Token token)
     {
-        for(TokenExchangeProvider tep : getProviders())
-        {
-            Token token = tep.getToken(tokenString);
-
-            if(token != null)
-            {
-                return token;
-            }
-        }
-
-        throw new InvalidTokenException();
-    }
-
-    @Override
-    public boolean isTokenValid(Token token)
-    {
-        for(TokenExchangeProvider tep : getProviders())
-        {
-            if(token.getAuthority().equals(tep.getAuthority()))
-            {
-                return tep.isTokenValid(token);
-            }
-        }
-
-        return false;
-    }
-
-    @Override
-    public void destroyToken(Token token)
-    {
-        for(TokenExchangeProvider tep : getProviders())
-        {
-            if(token.getAuthority().equals(tep.getAuthority()))
-            {
-                tep.destroyToken(token);
-            }
-        }
+        return getProviders().stream().map(tep -> tep.destroyToken(token)).filter(Objects::nonNull).allMatch(b -> b);
     }
 
     @Override

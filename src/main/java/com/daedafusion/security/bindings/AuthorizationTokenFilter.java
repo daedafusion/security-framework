@@ -1,14 +1,12 @@
 package com.daedafusion.security.bindings;
 
 import com.daedafusion.configuration.Configuration;
-import com.daedafusion.security.exceptions.UnauthorizedException;
+import com.daedafusion.security.authentication.impl.ContextToken;
 import com.daedafusion.sf.ServiceFramework;
 import com.daedafusion.sf.ServiceFrameworkException;
 import com.daedafusion.sf.ServiceFrameworkFactory;
 import com.daedafusion.security.authentication.Subject;
-import com.daedafusion.security.authentication.Token;
 import com.daedafusion.security.authentication.TokenExchange;
-import com.daedafusion.security.exceptions.InvalidTokenException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.*;
@@ -73,7 +71,9 @@ public class AuthorizationTokenFilter implements Filter
             // Strip "Bearer " if present
             authorizationToken = authorizationToken.replaceAll("(?i)"+ Pattern.quote("Bearer "), "");
 
-            Token token = tokenExchange.getToken(authorizationToken);
+            ContextToken token = new ContextToken(authorizationToken);
+            token.addContext("client-ip", httpServletRequest.getHeader("X-Forwarded-For"));
+
             Subject subject = tokenExchange.exchange(token);
 
             if(subject == null)
@@ -91,11 +91,6 @@ public class AuthorizationTokenFilter implements Filter
         {
             log.error("Framework error", e);
             httpServletResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-        catch (InvalidTokenException e)
-        {
-            log.error("Invalid Token", e);
-            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token");
         }
     }
 
