@@ -13,7 +13,10 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.regex.Pattern;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by mphilpot on 7/11/14.
@@ -71,8 +74,11 @@ public class AuthorizationTokenFilter implements Filter
             // Strip "Bearer " if present
             authorizationToken = authorizationToken.replaceAll("(?i)"+ Pattern.quote("Bearer "), "");
 
-            ContextToken token = new ContextToken(authorizationToken);
-            token.addContext("client-ip", httpServletRequest.getHeader("X-Forwarded-For"));
+            final ContextToken token = new ContextToken(authorizationToken);
+
+            Collections.list((Enumeration<String>)httpServletRequest.getHeaderNames()).forEach(h -> {
+                token.addContext(h, httpServletRequest.getHeader(h));
+            });
 
             Subject subject = tokenExchange.exchange(token);
 
