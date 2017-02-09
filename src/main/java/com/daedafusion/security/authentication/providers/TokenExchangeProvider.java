@@ -2,25 +2,39 @@ package com.daedafusion.security.authentication.providers;
 
 import com.daedafusion.sf.Provider;
 import com.daedafusion.security.authentication.AuthenticatedPrincipal;
-import com.daedafusion.security.authentication.Subject;
 import com.daedafusion.security.authentication.Token;
+
+import java.util.List;
 
 /**
  * Created by mphilpot on 7/15/14.
  */
 public interface TokenExchangeProvider extends Provider
 {
-    boolean canExchange(Token token);
+    /**
+     *
+     * @param token
+     * @return List of authPrincipals for given token. Empty list if token is invalid
+     */
+    List<AuthenticatedPrincipal> exchange(Token token);
 
-    AuthenticatedPrincipal exchange(Token token);
-    Token exchange(Subject subject);
+    /**
+     *
+     * @param ap
+     * @return valid Token if ap was created by this provider, null otherwise
+     */
+    Token exchange(AuthenticatedPrincipal ap);
 
-    boolean isValidToken(String tokenString);
-    boolean isTokenValid(Token token);
-
-    Token getToken(String tokenString);
-
+    /**
+     *
+     * @return string to identify this exchange provider
+     */
     String getAuthority();
 
-    void destroyToken(Token token);
+    /**
+     *
+     * @param token
+     * @return true if token was destroyed and/or rendered invalid, false otherwise. Null if token wasn't valid
+     */
+    Boolean destroyToken(Token token);
 }

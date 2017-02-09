@@ -11,11 +11,15 @@ import com.daedafusion.security.authentication.impl.DefaultRole;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.mockito.internal.util.collections.Sets;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.KeyPair;
 import java.util.*;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by mphilpot on 7/15/14.
@@ -110,7 +114,8 @@ public class SubjectTest
                 UUID.randomUUID(),
                 Principal.Type.ACCOUNT,
                 attributes,
-                Hex.encodeHexString(signature)
+                Hex.encodeHexString(signature),
+                () -> true
         );
 
         ap.addAssociation(petsDotCom);
@@ -121,5 +126,31 @@ public class SubjectTest
         ap.addContext("", ""); // TODO
 
         Subject subject = new Subject(Collections.singleton(ap));
+
+        assertThat(subject.isValid(), is(true));
+
+        AuthenticatedPrincipal ap2 = new DefaultAuthenticatedPrincipal(
+                UUID.randomUUID(),
+                Principal.Type.ACCOUNT,
+                attributes,
+                Hex.encodeHexString(signature),
+                () -> false
+        );
+
+        subject = new Subject(Sets.newSet(ap, ap2));
+
+        assertThat(subject.isValid(), is(false));
+
+        AuthenticatedPrincipal ap3 = new DefaultAuthenticatedPrincipal(
+                UUID.randomUUID(),
+                Principal.Type.ACCOUNT,
+                attributes,
+                Hex.encodeHexString(signature),
+                () -> false
+        );
+
+        subject = new Subject(Sets.newSet(ap2, ap3));
+
+        assertThat(subject.isValid(), is(false));
     }
 }

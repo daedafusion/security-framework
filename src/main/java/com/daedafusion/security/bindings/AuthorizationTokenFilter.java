@@ -1,21 +1,22 @@
 package com.daedafusion.security.bindings;
 
 import com.daedafusion.configuration.Configuration;
-import com.daedafusion.security.exceptions.UnauthorizedException;
+import com.daedafusion.security.authentication.impl.ContextToken;
 import com.daedafusion.sf.ServiceFramework;
 import com.daedafusion.sf.ServiceFrameworkException;
 import com.daedafusion.sf.ServiceFrameworkFactory;
 import com.daedafusion.security.authentication.Subject;
-import com.daedafusion.security.authentication.Token;
 import com.daedafusion.security.authentication.TokenExchange;
-import com.daedafusion.security.exceptions.InvalidTokenException;
 import org.apache.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.regex.Pattern;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by mphilpot on 7/11/14.
@@ -73,7 +74,12 @@ public class AuthorizationTokenFilter implements Filter
             // Strip "Bearer " if present
             authorizationToken = authorizationToken.replaceAll("(?i)"+ Pattern.quote("Bearer "), "");
 
-            Token token = tokenExchange.getToken(authorizationToken);
+            final ContextToken token = new ContextToken(authorizationToken);
+
+            Collections.list((Enumeration<String>)httpServletRequest.getHeaderNames()).forEach(h -> {
+                token.addContext(h, httpServletRequest.getHeader(h));
+            });
+
             Subject subject = tokenExchange.exchange(token);
 
             if(subject == null)
@@ -91,11 +97,6 @@ public class AuthorizationTokenFilter implements Filter
         {
             log.error("Framework error", e);
             httpServletResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-        catch (InvalidTokenException e)
-        {
-            log.error("Invalid Token", e);
-            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token");
         }
     }
 

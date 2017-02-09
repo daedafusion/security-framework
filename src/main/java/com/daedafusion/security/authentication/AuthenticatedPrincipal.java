@@ -17,4 +17,6 @@ public interface AuthenticatedPrincipal extends Principal
     void removeContext(String key);
     Set<String> getContextKeys();
     String getContext(String key);
+
+    boolean isValid();
 }

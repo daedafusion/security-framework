@@ -228,7 +228,8 @@ public class ExampleAuthenticationProvider extends AbstractProvider implements A
                 instanceId,
                 Principal.Type.ACCOUNT,
                 attributes,
-                signature
+                signature,
+                () -> true
         );
 
         // Add associations or context
