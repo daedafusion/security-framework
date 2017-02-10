@@ -28,7 +28,7 @@ public interface Principal
     String getIdentifier(); // full ldap?
     String getDomain();
     String getDomainQualifiedName(); // name@domain
-    long getCreationTime();
+    Long getCreationTime();
 
     boolean hasAttributes();
     Set<String> getAttributeNames();

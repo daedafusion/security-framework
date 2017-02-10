@@ -3,9 +3,7 @@ package com.daedafusion.security.authentication.impl;
 import com.daedafusion.security.authentication.Principal;
 import org.apache.log4j.Logger;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by mphilpot on 7/15/14.
@@ -43,37 +41,37 @@ public abstract class AbstractPrincipal implements Principal
     @Override
     public String getName()
     {
-        return attributes.get(PRINCIPAL_NAME).iterator().next();
+        return attributes.getOrDefault(PRINCIPAL_NAME, Collections.emptySet()).stream().findFirst().orElse(null);
     }
 
     @Override
     public String getAuthority()
     {
-        return attributes.get(PRINCIPAL_AUTHORITY).iterator().next();
+        return attributes.getOrDefault(PRINCIPAL_AUTHORITY, Collections.emptySet()).stream().findFirst().orElse(null);
     }
 
     @Override
     public String getIdentifier()
     {
-        return attributes.get(PRINCIPAL_IDENTIFIER).iterator().next();
+        return attributes.getOrDefault(PRINCIPAL_IDENTIFIER, Collections.emptySet()).stream().findFirst().orElse(null);
     }
 
     @Override
     public String getDomain()
     {
-        return attributes.get(PRINCIPAL_DOMAIN).iterator().next();
+        return attributes.getOrDefault(PRINCIPAL_DOMAIN, Collections.emptySet()).stream().findFirst().orElse(null);
     }
 
     @Override
     public String getDomainQualifiedName()
     {
-        return attributes.get(PRINCIPAL_DOMAIN_QUALIFIED_NAME).iterator().next();
+        return attributes.getOrDefault(PRINCIPAL_DOMAIN_QUALIFIED_NAME, Collections.emptySet()).stream().findFirst().orElse(null);
     }
 
     @Override
-    public long getCreationTime()
+    public Long getCreationTime()
     {
-        return Long.parseLong(attributes.get(PRINCIPAL_CREATION_TIME).iterator().next());
+        return Long.parseLong(attributes.getOrDefault(PRINCIPAL_CREATION_TIME, Collections.emptySet()).stream().findFirst().orElse(null));
     }
 
     @Override
@@ -91,7 +89,7 @@ public abstract class AbstractPrincipal implements Principal
     @Override
     public Set<String> getAttributes(String name)
     {
-        return attributes.get(name);
+        return attributes.getOrDefault(name, Collections.emptySet());
     }
 
     @Override
