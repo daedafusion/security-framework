@@ -92,6 +92,8 @@ public class AuthorizationTokenFilter implements Filter
 
             // Valid Subject -- execute request
             chain.doFilter(request, response);
+
+            LocalSubjectStorage.unset();
         }
         catch (ServiceFrameworkException e)
         {
