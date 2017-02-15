@@ -13,6 +13,10 @@ public class Obligation
 {
     private static final Logger log = Logger.getLogger(Obligation.class);
 
+    // Common Obligation Types
+    public static final String LOGGING = "obligation:logging";
+    public static final String AUDIT = "obligation:audit";
+
     public enum Fulfillment { ON_PERMIT, ON_DENY }
 
     private URI uri;

@@ -3,7 +3,6 @@ package com.daedafusion.security.authorization.impl;
 import com.daedafusion.sf.AbstractService;
 import com.daedafusion.security.authentication.Subject;
 import com.daedafusion.security.authorization.Authorization;
-import com.daedafusion.security.authorization.ResourceActionContext;
 import com.daedafusion.security.authorization.providers.AuthorizationProvider;
 import com.daedafusion.security.common.Context;
 import com.daedafusion.security.common.impl.DefaultContext;
@@ -16,6 +15,8 @@ import org.apache.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -30,47 +31,32 @@ public class UnanimousResultAuthorizationImpl extends AbstractService<Authorizat
     {
         List<Decision> decisions = new ArrayList<>();
 
-        for (AuthorizationProvider provider : getProviders())
+        for(AuthorizationProvider provider : getProviders())
         {
             decisions.add(provider.getAccessDecision(subject, resource, action, context));
         }
 
-        UnanimousResultCombiner<Decision> combiner = new UnanimousResultCombiner<>();
-
-        Decision result = combiner.getCombinedResult(decisions);
+        UnanimousResultCombiner combiner = new UnanimousResultCombiner();
+        Decision combinedResult = combiner.getCombinedResult(decisions);
 
         ObligationHandler handler = getServiceRegistry().getService(ObligationHandler.class);
 
-        Context obContext = new DefaultContext();
-        obContext.addContext("auth:resource", resource.toString());
-        obContext.addContext("auth:action", action);
+        Context obligationContext = new DefaultContext();
+        obligationContext.addContext("auth:resource", resource.toString());
+        obligationContext.addContext("auth:action", action);
+        context.getKeys().forEach(key -> obligationContext.putContext(key, context.getContext(key)));
 
-        for(String k : context.getKeys())
+        if(combinedResult.getResult().equals(Decision.Result.PERMIT))
         {
-            obContext.putContext(k, context.getContext(k));
-        }
-
-        if (result.getResult().equals(Decision.Result.PERMIT))
-        {
-            for (Obligation ob : result.getObligations())
-            {
-                if (ob.getFulfillment().equals(Obligation.Fulfillment.ON_PERMIT))
-                {
-                    handler.handle(ob, obContext);
-                }
-            }
+            combinedResult.getObligations().stream().filter(ob -> ob.getFulfillment().equals(Obligation.Fulfillment.ON_PERMIT))
+                    .forEach(ob -> handler.handle(ob, obligationContext));
 
             return true;
         }
         else
         {
-            for (Obligation ob : result.getObligations())
-            {
-                if(ob.getFulfillment().equals(Obligation.Fulfillment.ON_DENY))
-                {
-                    handler.handle(ob, obContext);
-                }
-            }
+            combinedResult.getObligations().stream().filter(ob -> ob.getFulfillment().equals(Obligation.Fulfillment.ON_DENY))
+                    .forEach(ob -> handler.handle(ob, obligationContext));
 
             return false;
         }
@@ -79,120 +65,12 @@ public class UnanimousResultAuthorizationImpl extends AbstractService<Authorizat
     @Override
     public boolean isAuthorized(Subject subject, HttpServletRequest request, Context context)
     {
-        List<Decision> decisions = new ArrayList<>();
-
-        for (AuthorizationProvider provider : getProviders())
-        {
-            decisions.add(provider.getAccessDecision(subject, request, context));
-        }
-
-        UnanimousResultCombiner<Decision> combiner = new UnanimousResultCombiner<>();
-
-        Decision result = combiner.getCombinedResult(decisions);
-
-        ObligationHandler handler = getServiceRegistry().getService(ObligationHandler.class);
-
-        Context obContext = new DefaultContext();
-        obContext.addContext("auth:request", request.toString());
-
-        for(String k : context.getKeys())
-        {
-            obContext.putContext(k, context.getContext(k));
-        }
-
-        if (result.getResult().equals(Decision.Result.PERMIT))
-        {
-            for (Obligation ob : result.getObligations())
-            {
-                if (ob.getFulfillment().equals(Obligation.Fulfillment.ON_PERMIT))
-                {
-                    handler.handle(ob, obContext);
-                }
-            }
-
-            return true;
-        }
-        else
-        {
-            for (Obligation ob : result.getObligations())
-            {
-                if(ob.getFulfillment().equals(Obligation.Fulfillment.ON_DENY))
-                {
-                    handler.handle(ob, obContext);
-                }
-            }
-
-            return false;
-        }
-    }
-
-    @Override
-    public boolean[] isAuthorized(Subject subject, List<ResourceActionContext> resourceActionContext)
-    {
-        boolean[] finalResult = new boolean[resourceActionContext.size()];
-
-        Decision[][] decisionMatrix = new Decision[getProviders().size()][resourceActionContext.size()];
-
-        Decision[] matrixResult = new Decision[getProviders().size()];
-
-        ObligationHandler handler = getServiceRegistry().getService(ObligationHandler.class);
-
-        for(int i = 0; i < getProviders().size(); i++)
-        {
-            Decision[] decisions = getProviders().get(i).getAccessDecisionSet(subject, resourceActionContext);
-
-            decisionMatrix[i] = decisions;
-        }
-
-        for(int j = 0; j < resourceActionContext.size(); j++)
-        {
-            List<Decision> acrossProviders = new ArrayList<>();
-
-            for (int i = 0; i < getProviders().size(); i++)
-            {
-                acrossProviders.add(decisionMatrix[i][j]);
-            }
-
-            UnanimousResultCombiner<Decision> combiner = new UnanimousResultCombiner<>();
-
-            matrixResult[j] = combiner.getCombinedResult(acrossProviders);
-        }
-
-        for(int j = 0; j < resourceActionContext.size(); j++ )
-        {
-            handler.handle(matrixResult[j].getObligations(), resourceActionContext.get(j).getContext());
-
-            if(matrixResult[j].getResult().equals(Decision.Result.PERMIT))
-            {
-                log.warn("Obligation Context needs to be fixed in multi-decision authorization");
-
-                for(Obligation ob : matrixResult[j].getObligations())
-                {
-                    if(ob.getFulfillment().equals(Obligation.Fulfillment.ON_PERMIT))
-                    {
-                        handler.handle(ob, resourceActionContext.get(j).getContext());
-                    }
-                }
-
-                finalResult[j] = true;
-            }
-            else
-            {
-                log.warn("Obligation Context needs to be fixed in multi-decision authorization");
-
-                for(Obligation ob : matrixResult[j].getObligations())
-                {
-                    if(ob.getFulfillment().equals(Obligation.Fulfillment.ON_DENY))
-                    {
-                        handler.handle(ob, resourceActionContext.get(j).getContext());
-                    }
-                }
-
-                finalResult[j] = false;
-            }
-        }
-
-        return finalResult;
+        URI uri = URI.create(request.getRequestURI());
+        String action = request.getMethod();
+        Context updatedContext = new DefaultContext();
+        context.getKeys().forEach(key -> context.getContext(key).forEach(value -> updatedContext.addContext(key, value)));
+        Collections.list((Enumeration<String>)request.getHeaderNames()).forEach(key -> updatedContext.addContext(key, request.getHeader(key)));
+        return isAuthorized(subject, uri, action, updatedContext);
     }
 
     @Override

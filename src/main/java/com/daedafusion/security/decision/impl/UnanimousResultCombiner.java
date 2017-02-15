@@ -4,41 +4,43 @@ import com.daedafusion.security.decision.Combiner;
 import com.daedafusion.security.decision.Decision;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by mphilpot on 7/14/14.
  */
-public class UnanimousResultCombiner<D extends Decision> implements Combiner
+public class UnanimousResultCombiner implements Combiner<Decision>
 {
     private static final Logger log = Logger.getLogger(UnanimousResultCombiner.class);
 
     @Override
-    public Decision getCombinedResult(List decisions)
+    public Decision getCombinedResult(List<Decision> decisions)
     {
         Decision result = new Decision(UUID.randomUUID().toString());
 
-        Decision.Result r = null;
+        List<Decision.Result> intermediateResults = new ArrayList<>();
 
-        for (Object obj : decisions)
-        {
-            // TODO shouldn't need this cast
-            Decision d = (Decision) obj;
-
+        decisions.forEach(d -> {
             result.getObligations().addAll(d.getObligations());
+            intermediateResults.add(d.getResult());
+        });
 
-            if(r == null)
-            {
-                r = d.getResult();
-            }
-            else if(d.getResult().equals(Decision.Result.DENY))
-            {
-                r = Decision.Result.DENY;
-            }
+        // Filter abstain
+        if(intermediateResults.stream().filter(r -> !r.equals(Decision.Result.ABSTAIN)).count() == 0)
+        {
+            // All Abstained
+            result.setResult(Decision.Result.DENY);
         }
-
-        result.setResult(r);
+        else if(intermediateResults.stream().filter(r -> !r.equals(Decision.Result.ABSTAIN)).allMatch(r -> r.equals(Decision.Result.PERMIT)))
+        {
+            result.setResult(Decision.Result.PERMIT);
+        }
+        else
+        {
+            result.setResult(Decision.Result.DENY);
+        }
 
         return result;
     }

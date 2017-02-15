@@ -115,4 +115,25 @@ public class CombinerTest
         assertThat(result.getResult(), is(Decision.Result.DENY));
         assertThat(result.getObligations().size(), is(2));
     }
+
+    @Test
+    public void allAbstain()
+    {
+        UnanimousResultCombiner combiner = new UnanimousResultCombiner();
+
+        Decision d1 = new Decision(UUID.randomUUID().toString());
+        d1.setResult(Decision.Result.ABSTAIN);
+
+        Decision d2 = new Decision(UUID.randomUUID().toString());
+        d2.setResult(Decision.Result.ABSTAIN);
+
+        List<Decision> list = new ArrayList<>();
+
+        list.add(d1);
+        list.add(d2);
+
+        Decision result = combiner.getCombinedResult(list);
+
+        assertThat(result.getResult(), is(Decision.Result.DENY));
+    }
 }

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by mphilpot on 7/14/14.
  */
-public interface Combiner<D extends Decision>
+public interface Combiner<Decision>
 {
-    D getCombinedResult(List<D> decisions);
+    Decision getCombinedResult(List<Decision> decisions);
 }
