@@ -15,6 +15,4 @@ public interface Authorization
     boolean isAuthorized(Subject subject, URI resource, String action, Context context);
 
     boolean isAuthorized(Subject subject, HttpServletRequest request, Context context);
-
-    boolean[] isAuthorized(Subject subject, List<ResourceActionContext> resourceActionContextTuples);
 }

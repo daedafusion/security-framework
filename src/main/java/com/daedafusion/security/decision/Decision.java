@@ -21,7 +21,13 @@ public class Decision
 
     public Decision(String id)
     {
+        this(id, Result.DENY);
+    }
+
+    public Decision(String id, Result result)
+    {
         this.id = id;
+        this.result = result;
         this.obligations = new ArrayList<>();
     }
 

@@ -35,24 +35,6 @@ public class AuthenticationImpl extends AbstractService<AuthenticationProvider> 
             {
                 combinerType = getProperty("combiner", "atLeastOne");
             }
-
-            @Override
-            public void start()
-            {
-
-            }
-
-            @Override
-            public void stop()
-            {
-
-            }
-
-            @Override
-            public void teardown()
-            {
-
-            }
         });
     }
 
@@ -70,13 +52,12 @@ public class AuthenticationImpl extends AbstractService<AuthenticationProvider> 
             sessions.put(ap.getAuthority(), session);
         }
 
-        // TODO This should call a service so it's configurable
-        Combiner combiner = null;
+        Combiner<Decision> combiner = null;
 
         switch (combinerType)
         {
             case "unanimous":
-                combiner = new UnanimousResultCombiner<>();
+                combiner = new UnanimousResultCombiner();
                 break;
             case "atLeastOne":
                 combiner = new AtLeastOneResultCombiner();
