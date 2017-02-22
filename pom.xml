@@ -4,7 +4,7 @@
 
     <groupId>com.daedafusion</groupId>
     <artifactId>security-framework</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
 
     <name>DaedaFusion Security Framework</name>
     <url>http://daedafusion.com</url>
@@ -48,12 +48,12 @@
             <dependency>
                 <groupId>com.daedafusion</groupId>
                 <artifactId>service-framework-core</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.1</version>
             </dependency>
             <dependency>
                 <groupId>com.daedafusion</groupId>
                 <artifactId>configuration-core</artifactId>
-                <version>1.1-SNAPSHOT</version>
+                <version>1.1</version>
             </dependency>
             <dependency>
                 <groupId>com.daedafusion</groupId>
