@@ -19,6 +19,7 @@ public class TokenExchangeImpl extends AbstractService<TokenExchangeProvider> im
     {
         Set<AuthenticatedPrincipal> aps = Arrays.stream(tokens)
                 .flatMap(token -> getProviders().stream().flatMap(tep -> tep.exchange(token).stream()))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
         if(!aps.isEmpty())
@@ -36,6 +37,7 @@ public class TokenExchangeImpl extends AbstractService<TokenExchangeProvider> im
     {
         return subject.getPrincipals().stream()
                 .flatMap(ap -> getProviders().stream().map(tep -> tep.exchange(ap)))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
