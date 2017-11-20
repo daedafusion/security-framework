@@ -10,11 +10,14 @@ import com.daedafusion.security.authentication.TokenExchange;
 import org.apache.log4j.Logger;
 
 import javax.servlet.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.StreamSupport;
 
@@ -63,8 +66,17 @@ public class AuthorizationTokenFilter implements Filter
 
         if(authorizationToken == null)
         {
-            httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return;
+            Optional<Cookie> cookieOpt = Arrays.stream(httpServletRequest.getCookies() != null ? httpServletRequest.getCookies() : new Cookie[]{})
+                    .filter(c -> c.getName().equals("bearer")).findFirst();
+            if(cookieOpt.isPresent())
+            {
+                authorizationToken = cookieOpt.get().getValue();
+            }
+            else
+            {
+                httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
         }
 
         try
