@@ -86,6 +86,12 @@ public class AuthorizationTokenFilter implements Filter
             // Strip "Bearer " if present
             authorizationToken = authorizationToken.replaceAll("(?i)"+ Pattern.quote("Bearer "), "");
 
+            // Catch common cases we don't want passed through to exchange
+            if(authorizationToken.isEmpty() || authorizationToken.equals("null"))
+            {
+                httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
+            }
+
             final ContextToken token = new ContextToken(authorizationToken);
 
             Collections.list((Enumeration<String>)httpServletRequest.getHeaderNames()).forEach(h -> {
