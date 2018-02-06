@@ -89,7 +89,8 @@ public class AuthorizationTokenFilter implements Filter
             // Catch common cases we don't want passed through to exchange
             if(authorizationToken.isEmpty() || authorizationToken.equals("null"))
             {
-                httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
+                httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
 
             final ContextToken token = new ContextToken(authorizationToken);
