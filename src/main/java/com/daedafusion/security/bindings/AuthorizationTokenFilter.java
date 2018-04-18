@@ -72,11 +72,17 @@ public class AuthorizationTokenFilter implements Filter
             {
                 authorizationToken = cookieOpt.get().getValue();
             }
-            else
-            {
-                httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
-                return;
-            }
+        }
+
+        if(authorizationToken == null)
+        {
+            authorizationToken = httpServletRequest.getParameter("authorization");
+        }
+
+        if(authorizationToken == null)
+        {
+            httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
         }
 
         try
