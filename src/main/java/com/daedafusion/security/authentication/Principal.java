@@ -17,7 +17,7 @@ public interface Principal
     final String PRINCIPAL_CREATION_TIME = "principal:creation-time";
     final String PRINCIPAL_TOKEN = "principal:token";
 
-    enum Type { ACCOUNT, GROUP, ORGANIZATION, MACHINE, ROLE }
+    enum Type { ACCOUNT, GROUP, ORGANIZATION, MACHINE, ROLE, ANONYMOUS }
 
     UUID getInstanceId();
     Type getType();
