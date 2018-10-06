@@ -1,6 +1,7 @@
 package com.daedafusion.security.bindings;
 
 import com.daedafusion.configuration.Configuration;
+import com.daedafusion.security.authentication.Token;
 import com.daedafusion.security.authentication.impl.ContextToken;
 import com.daedafusion.sf.ServiceFramework;
 import com.daedafusion.sf.ServiceFrameworkException;
@@ -14,11 +15,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
@@ -62,24 +61,24 @@ public class AuthorizationTokenFilter implements Filter
             }
         }
 
-        String authorizationToken = httpServletRequest.getHeader("Authorization");
+        List<String> authorizationTokens = Collections.list(httpServletRequest.getHeaders("Authorization"));
 
-        if(authorizationToken == null)
+        if(authorizationTokens.isEmpty())
         {
             Optional<Cookie> cookieOpt = Arrays.stream(httpServletRequest.getCookies() != null ? httpServletRequest.getCookies() : new Cookie[]{})
                     .filter(c -> c.getName().equals("bearer")).findFirst();
             if(cookieOpt.isPresent())
             {
-                authorizationToken = cookieOpt.get().getValue();
+                authorizationTokens = Collections.singletonList(cookieOpt.get().getValue());
             }
         }
 
-        if(authorizationToken == null)
+        if(authorizationTokens.isEmpty() && httpServletRequest.getParameter("authorization") != null)
         {
-            authorizationToken = httpServletRequest.getParameter("authorization");
+            authorizationTokens = Collections.singletonList(httpServletRequest.getParameter("authorization"));
         }
 
-        if(authorizationToken == null)
+        if(authorizationTokens.isEmpty())
         {
             httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -90,22 +89,18 @@ public class AuthorizationTokenFilter implements Filter
             TokenExchange tokenExchange = framework.getService(TokenExchange.class);
 
             // Strip "Bearer " if present
-            authorizationToken = authorizationToken.replaceAll("(?i)"+ Pattern.quote("Bearer "), "");
+            List<Token> contextTokens =  authorizationTokens.stream()
+                    .map(token -> token.replaceAll("(?i)"+ Pattern.quote("Bearer "), ""))
+                    .map(ContextToken::new)
+                    .collect(Collectors.toList());
 
-            // Catch common cases we don't want passed through to exchange
-            if(authorizationToken.isEmpty() || authorizationToken.equals("null"))
-            {
-                httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-
-            final ContextToken token = new ContextToken(authorizationToken);
-
-            Collections.list((Enumeration<String>)httpServletRequest.getHeaderNames()).forEach(h -> {
-                token.addContext(h, httpServletRequest.getHeader(h));
+            contextTokens.forEach(contextToken -> {
+                Collections.list((Enumeration<String>)httpServletRequest.getHeaderNames()).forEach(h -> {
+                    ((ContextToken)contextToken).addContext(h, httpServletRequest.getHeader(h));
+                });
             });
 
-            Subject subject = tokenExchange.exchange(token);
+            Subject subject = tokenExchange.exchange(contextTokens);
 
             if(subject == null)
             {

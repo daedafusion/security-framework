@@ -13,6 +13,7 @@ public interface TokenExchange
      * @return valid subject if the exchange could be performed, null otherwise
      */
     Subject exchange(Token... tokens);
+    Subject exchange(List<Token> tokens);
 
     /**
      *
