@@ -56,9 +56,10 @@ public class IdentityStoreImpl extends AbstractService<IdentityStoreProvider> im
             domain = elem[1];
         }
 
-        Context context = new DefaultContext();
-        context.addContext("user", user);
-        context.addContext("domain", domain);
+        Context context = DefaultContext.builder()
+                .addContext("user", user)
+                .addContext("domain", domain)
+                .build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("identity"), "GET", context))
         {
@@ -86,8 +87,7 @@ public class IdentityStoreImpl extends AbstractService<IdentityStoreProvider> im
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext();
-        context.addContext("domain", domain);
+        Context context = new DefaultContext("domain", domain);
 
         if(auth.isAuthorized(subject, URI.create("identity:domain"), "GET", context))
         {
@@ -141,9 +141,10 @@ public class IdentityStoreImpl extends AbstractService<IdentityStoreProvider> im
             domain = elem[1];
         }
 
-        Context context = new DefaultContext();
-        context.addContext("user", user);
-        context.addContext("domain", domain);
+        Context context = DefaultContext.builder()
+                .addContext("user", user)
+                .addContext("domain", domain)
+                .build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("identity:password"), "PUT", context))
         {

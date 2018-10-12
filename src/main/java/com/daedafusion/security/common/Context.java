@@ -10,7 +10,4 @@ public interface Context
 {
     Set<String> getKeys();
     List<String> getContext(String key);
-    void putContext(String key, List<String> values);
-
-    void addContext(String key, String value);
 }

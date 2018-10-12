@@ -41,10 +41,13 @@ public class UnanimousResultAuthorizationImpl extends AbstractService<Authorizat
 
         ObligationHandler handler = getServiceRegistry().getService(ObligationHandler.class);
 
-        Context obligationContext = new DefaultContext();
-        obligationContext.addContext("auth:resource", resource.toString());
-        obligationContext.addContext("auth:action", action);
-        context.getKeys().forEach(key -> obligationContext.putContext(key, context.getContext(key)));
+
+        DefaultContext.Builder builder = DefaultContext.builder()
+                .addContext("auth:resource", resource.toString())
+                .addContext("auth:action", action);
+
+        context.getKeys().forEach(key -> builder.setContext(key, context.getContext(key)));
+        Context obligationContext = builder.build();
 
         if(combinedResult.getResult().equals(Decision.Result.PERMIT))
         {
@@ -67,9 +70,13 @@ public class UnanimousResultAuthorizationImpl extends AbstractService<Authorizat
     {
         URI uri = URI.create(request.getRequestURI());
         String action = request.getMethod();
-        Context updatedContext = new DefaultContext();
-        context.getKeys().forEach(key -> context.getContext(key).forEach(value -> updatedContext.addContext(key, value)));
-        Collections.list((Enumeration<String>)request.getHeaderNames()).forEach(key -> updatedContext.addContext(key, request.getHeader(key)));
+
+        DefaultContext.Builder builder = DefaultContext.builder();
+        context.getKeys().forEach(key -> context.getContext(key).forEach(value -> builder.addContext(key, value)));
+        Collections.list((Enumeration<String>)request.getHeaderNames()).forEach(key -> builder.addContext(key, request.getHeader(key)));
+
+        Context updatedContext = builder.build();
+
         return isAuthorized(subject, uri, action, updatedContext);
     }
 
