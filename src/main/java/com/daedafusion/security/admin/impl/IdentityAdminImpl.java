@@ -30,8 +30,7 @@ public class IdentityAdminImpl extends AbstractService<IdentityAdminProvider> im
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext();
-        context.addContext("domain", identity.getDomain());
+        Context context = new DefaultContext("domain", identity.getDomain());
 
         // TODO serialize identity and add it to context
 
@@ -58,8 +57,7 @@ public class IdentityAdminImpl extends AbstractService<IdentityAdminProvider> im
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext();
-        context.addContext("domain", identity.getDomain());
+        Context context = new DefaultContext("domain", identity.getDomain());
 
         // TODO serialize identity and add it to context
 
@@ -86,8 +84,7 @@ public class IdentityAdminImpl extends AbstractService<IdentityAdminProvider> im
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext();
-        context.addContext("domain", domain);
+        Context context = new DefaultContext("domain", domain);
 
         // TODO serialize identity and add it to context
 
@@ -109,8 +106,7 @@ public class IdentityAdminImpl extends AbstractService<IdentityAdminProvider> im
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext();
-        context.addContext("domain", domain);
+        Context context = new DefaultContext("domain", domain);
 
         if(auth.isAuthorized(subject, java.net.URI.create("identity:domain"), "GET", context))
         {
