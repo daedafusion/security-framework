@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by mphilpot on 7/15/14.
@@ -17,10 +18,7 @@ public class TokenExchangeImpl extends AbstractService<TokenExchangeProvider> im
     @Override
     public Subject exchange(Token... tokens)
     {
-        Set<AuthenticatedPrincipal> aps = Arrays.stream(tokens)
-                .flatMap(token -> getProviders().stream().flatMap(tep -> tep.exchange(token).stream()))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+        Set<AuthenticatedPrincipal> aps = getAPs(Arrays.stream(tokens));
 
         if(!aps.isEmpty())
         {
@@ -30,6 +28,29 @@ public class TokenExchangeImpl extends AbstractService<TokenExchangeProvider> im
         {
             return null;
         }
+    }
+
+    @Override
+    public Subject exchange(List<Token> tokens)
+    {
+        Set<AuthenticatedPrincipal> aps = getAPs(tokens.stream());
+
+        if(!aps.isEmpty())
+        {
+            return new Subject(aps);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private Set<AuthenticatedPrincipal> getAPs(Stream<Token> tokens)
+    {
+        return tokens
+                .flatMap(token -> getProviders().stream().flatMap(tep -> tep.exchange(token).stream()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 
     @Override
