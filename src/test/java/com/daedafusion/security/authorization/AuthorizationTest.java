@@ -1,5 +1,6 @@
 package com.daedafusion.security.authorization;
 
+import com.daedafusion.sf.LifecycleListener;
 import com.daedafusion.sf.ServiceRegistry;
 import com.daedafusion.security.authentication.Subject;
 import com.daedafusion.security.authorization.impl.UnanimousResultAuthorizationImpl;
@@ -60,6 +61,8 @@ public class AuthorizationTest
         impl.setServiceRegistry(mockRegistry);
 
         impl.getProviders().add(mockProvider);
+
+        impl.getListeners().forEach(LifecycleListener::postStart);
 
         impl.isAuthorized(null, URI.create("resource"), "get", new DefaultContext("someKey", "someValue"));
 
