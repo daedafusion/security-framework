@@ -1,5 +1,6 @@
 package com.daedafusion.security.authorization.impl;
 
+import com.daedafusion.configuration.Configuration;
 import com.daedafusion.sf.AbstractService;
 import com.daedafusion.security.authentication.Subject;
 import com.daedafusion.security.authorization.Authorization;
@@ -10,14 +11,13 @@ import com.daedafusion.security.decision.Decision;
 import com.daedafusion.security.decision.impl.UnanimousResultCombiner;
 import com.daedafusion.security.obligation.Obligation;
 import com.daedafusion.security.obligation.ObligationHandler;
+import com.daedafusion.sf.LifecycleListener;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by mphilpot on 7/14/14.
@@ -26,12 +26,32 @@ public class UnanimousResultAuthorizationImpl extends AbstractService<Authorizat
 {
     private static final Logger log = Logger.getLogger(UnanimousResultAuthorizationImpl.class);
 
+    private Set<AuthorizationProvider> enabledProviders;
+
+    public UnanimousResultAuthorizationImpl()
+    {
+        addLifecycleListener(new LifecycleListener()
+        {
+            @Override
+            public void postStart()
+            {
+                Set<String> disabledProviders = Arrays.stream(
+                        Configuration.getInstance().getString("security.disabledAuthorizationProviders", "").split(","))
+                        .map(String::trim)
+                        .collect(Collectors.toSet());
+                enabledProviders = getProviders().stream()
+                        .filter(p -> !disabledProviders.contains(p.getClass().getName()))
+                        .collect(Collectors.toSet());
+            }
+        });
+    }
+
     @Override
     public boolean isAuthorized(Subject subject, URI resource, String action, Context context)
     {
         List<Decision> decisions = new ArrayList<>();
 
-        for(AuthorizationProvider provider : getProviders())
+        for(AuthorizationProvider provider : enabledProviders)
         {
             decisions.add(provider.getAccessDecision(subject, resource, action, context));
         }
