@@ -24,7 +24,7 @@ public class PolicyAdminImpl extends AbstractService<PolicyAdminProvider> implem
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext("domain", domain);
+        Context context = DefaultContext.builder().addContext("domain", domain).build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("policy:lockout"), "GET", context))
         {
@@ -41,7 +41,7 @@ public class PolicyAdminImpl extends AbstractService<PolicyAdminProvider> implem
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext("domain", domain);
+        Context context = DefaultContext.builder().addContext("domain", domain).build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("policy:lockout"), "POST", context))
         {
@@ -58,7 +58,7 @@ public class PolicyAdminImpl extends AbstractService<PolicyAdminProvider> implem
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext("domain", domain);
+        Context context = DefaultContext.builder().addContext("domain", domain).build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("policy:password"), "GET", context))
         {
@@ -75,7 +75,7 @@ public class PolicyAdminImpl extends AbstractService<PolicyAdminProvider> implem
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext("domain", domain);
+        Context context = DefaultContext.builder().addContext("domain", domain).build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("policy:password"), "POST", context))
         {

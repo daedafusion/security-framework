@@ -87,7 +87,7 @@ public class IdentityStoreImpl extends AbstractService<IdentityStoreProvider> im
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext("domain", domain);
+        Context context = DefaultContext.builder().addContext("domain", domain).build();
 
         if(auth.isAuthorized(subject, URI.create("identity:domain"), "GET", context))
         {
