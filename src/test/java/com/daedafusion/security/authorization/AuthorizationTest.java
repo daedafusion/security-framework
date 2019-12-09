@@ -64,7 +64,7 @@ public class AuthorizationTest
 
         impl.getListeners().forEach(LifecycleListener::postStart);
 
-        impl.isAuthorized(null, URI.create("resource"), "get", new DefaultContext("someKey", "someValue"));
+        impl.isAuthorized(null, URI.create("resource"), "get", DefaultContext.builder().addContext("someKey", "someValue").build());
 
         verify(mockObHandler).handle(isA(Obligation.class), isA(Context.class));
     }

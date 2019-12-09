@@ -14,17 +14,6 @@ public class DefaultContext implements Context
 
     private Map<String, List<String>> context;
 
-    public DefaultContext()
-    {
-        context = new HashMap<>();
-    }
-
-    public DefaultContext(String key, String value)
-    {
-        this();
-        context.put(key, Collections.singletonList(value));
-    }
-
     private DefaultContext(Builder builder)
     {
         this.context = builder.context;
@@ -39,22 +28,7 @@ public class DefaultContext implements Context
     @Override
     public List<String> getContext(String key)
     {
-        if(!context.containsKey(key))
-        {
-            context.put(key, new ArrayList<>());
-        }
-
         return context.get(key);
-    }
-
-    public void putContext(String key, List<String> values)
-    {
-        context.put(key, values);
-    }
-
-    public void addContext(String key, String value)
-    {
-        getContext(key).add(value);
     }
 
     @Override

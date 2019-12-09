@@ -26,7 +26,7 @@ public class SessionAdminImpl extends AbstractService<SessionAdminProvider> impl
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext();
+        Context context = DefaultContext.builder().build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("session"), "GET", context))
         {
@@ -43,7 +43,7 @@ public class SessionAdminImpl extends AbstractService<SessionAdminProvider> impl
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext();
+        Context context = DefaultContext.builder().build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("session"), "DELETE", context))
         {

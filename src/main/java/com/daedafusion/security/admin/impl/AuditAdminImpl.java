@@ -26,7 +26,7 @@ public class AuditAdminImpl extends AbstractService<AuditAdminProvider> implemen
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext();
+        Context context = DefaultContext.builder().build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("audit"), "GET", context))
         {
@@ -50,7 +50,7 @@ public class AuditAdminImpl extends AbstractService<AuditAdminProvider> implemen
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext("username", username);
+        Context context = DefaultContext.builder().addContext("username", username).build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("audit"), "GET", context))
         {
@@ -74,7 +74,7 @@ public class AuditAdminImpl extends AbstractService<AuditAdminProvider> implemen
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext("source", source);
+        Context context = DefaultContext.builder().addContext("source", source).build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("audit"), "GET", context))
         {

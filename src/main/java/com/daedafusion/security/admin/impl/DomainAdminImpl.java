@@ -27,7 +27,7 @@ public class DomainAdminImpl extends AbstractService<DomainAdminProvider> implem
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext("domain", domain.getDomainName());
+        Context context = DefaultContext.builder().addContext("domain", domain.getDomainName()).build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("domain"), "POST", context))
         {
@@ -47,7 +47,7 @@ public class DomainAdminImpl extends AbstractService<DomainAdminProvider> implem
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext("domain", domain.getDomainName());
+        Context context = DefaultContext.builder().addContext("domain", domain.getDomainName()).build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("domain"), "PUT", context))
         {
@@ -67,7 +67,7 @@ public class DomainAdminImpl extends AbstractService<DomainAdminProvider> implem
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext("domain", domain);
+        Context context = DefaultContext.builder().addContext("domain", domain).build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("domain"), "DELETE", context))
         {
@@ -87,7 +87,7 @@ public class DomainAdminImpl extends AbstractService<DomainAdminProvider> implem
     {
         Authorization auth = getServiceRegistry().getService(Authorization.class);
 
-        Context context = new DefaultContext();
+        Context context = DefaultContext.builder().build();
 
         if(auth.isAuthorized(subject, java.net.URI.create("domain"), "GET", context))
         {
