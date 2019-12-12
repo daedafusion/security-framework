@@ -37,4 +37,6 @@ public interface TokenExchangeProvider extends Provider
      * @return true if token was destroyed and/or rendered invalid, false otherwise. Null if token wasn't valid
      */
     Boolean destroyToken(Token token);
+
+    boolean supportsAnonymous();
 }
