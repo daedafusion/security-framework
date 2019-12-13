@@ -2,6 +2,7 @@ package com.daedafusion.security.authentication;
 
 import com.daedafusion.sf.AbstractService;
 import com.daedafusion.security.authentication.providers.TokenExchangeProvider;
+import com.daedafusion.sf.LifecycleListener;
 import org.apache.log4j.Logger;
 
 import java.util.*;
@@ -18,22 +19,22 @@ public class TokenExchangeImpl extends AbstractService<TokenExchangeProvider> im
     @Override
     public Subject exchange(Token... tokens)
     {
-        Set<AuthenticatedPrincipal> aps = getAPs(Arrays.stream(tokens));
-
-        if(!aps.isEmpty())
-        {
-            return new Subject(aps);
-        }
-        else
-        {
-            return null;
-        }
+        return exchange(Arrays.asList(tokens));
     }
 
     @Override
     public Subject exchange(List<Token> tokens)
     {
-        Set<AuthenticatedPrincipal> aps = getAPs(tokens.stream());
+        Set<AuthenticatedPrincipal> aps;
+
+        if(tokens.size() == 0)
+        {
+            aps = getAnonymousAPs();
+        }
+        else
+        {
+            aps = getAPs(tokens.stream());
+        }
 
         if(!aps.isEmpty())
         {
@@ -48,9 +49,20 @@ public class TokenExchangeImpl extends AbstractService<TokenExchangeProvider> im
     private Set<AuthenticatedPrincipal> getAPs(Stream<Token> tokens)
     {
         return tokens
-                .flatMap(token -> getProviders().stream().flatMap(tep -> tep.exchange(token).stream()))
+                .flatMap(token -> getProviders().stream()
+                    .filter(ap -> !ap.supportsAnonymous())
+                    .flatMap(tep -> tep.exchange(token).stream()))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
+    }
+
+    private Set<AuthenticatedPrincipal> getAnonymousAPs()
+    {
+        return getProviders().stream()
+            .filter(TokenExchangeProvider::supportsAnonymous)
+            .flatMap(tep -> tep.exchange(() -> "anonymous").stream())
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
     }
 
     @Override
