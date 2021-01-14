@@ -1,14 +1,15 @@
 package com.daedafusion.security.bindings;
 
 import com.daedafusion.security.authentication.Subject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by mphilpot on 7/14/14.
  */
 public class SubjectUtil
 {
-    private static final Logger log = Logger.getLogger(SubjectUtil.class);
+    private static final Logger log = LogManager.getLogger(SubjectUtil.class);
 
     private SubjectUtil(){}
 

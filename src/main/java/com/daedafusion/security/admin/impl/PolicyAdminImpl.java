@@ -10,14 +10,15 @@ import com.daedafusion.security.common.LockoutPolicy;
 import com.daedafusion.security.common.PasswordPolicy;
 import com.daedafusion.security.common.impl.DefaultContext;
 import com.daedafusion.security.exceptions.UnauthorizedException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by mphilpot on 7/25/14.
  */
 public class PolicyAdminImpl extends AbstractService<PolicyAdminProvider> implements PolicyAdmin
 {
-    private static final Logger log = Logger.getLogger(PolicyAdminImpl.class);
+    private static final Logger log = LogManager.getLogger(PolicyAdminImpl.class);
 
     @Override
     public LockoutPolicy getLockoutPolicy(Subject subject, String domain) throws UnauthorizedException

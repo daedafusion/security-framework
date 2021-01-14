@@ -9,7 +9,8 @@ import com.daedafusion.security.authentication.impl.DefaultAssociationPrincipal;
 import com.daedafusion.security.authentication.impl.DefaultAuthenticatedPrincipal;
 import com.daedafusion.security.authentication.impl.DefaultRole;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 import org.mockito.internal.util.collections.Sets;
 
@@ -26,7 +27,7 @@ import static org.junit.Assert.assertThat;
  */
 public class SubjectTest
 {
-    private static final Logger log = Logger.getLogger(SubjectTest.class);
+    private static final Logger log = LogManager.getLogger(SubjectTest.class);
 
     @Test
     public void main() throws KeyMaterialException, IOException, CryptoException

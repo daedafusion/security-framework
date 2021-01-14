@@ -1,7 +1,8 @@
 package com.daedafusion.security.authentication.impl;
 
 import com.daedafusion.security.authentication.Principal;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -10,7 +11,7 @@ import java.util.*;
  */
 public abstract class AbstractPrincipal implements Principal
 {
-    private static final Logger log = Logger.getLogger(AbstractPrincipal.class);
+    private static final Logger log = LogManager.getLogger(AbstractPrincipal.class);
 
     private final UUID instanceId;
     private final Type                type;

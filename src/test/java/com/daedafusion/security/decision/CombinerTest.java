@@ -2,7 +2,8 @@ package com.daedafusion.security.decision;
 
 import com.daedafusion.security.decision.impl.UnanimousResultCombiner;
 import com.daedafusion.security.obligation.Obligation;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import java.net.URI;
@@ -18,7 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class CombinerTest
 {
-    private static final Logger log = Logger.getLogger(CombinerTest.class);
+    private static final Logger log = LogManager.getLogger(CombinerTest.class);
 
     @Test
     public void allPermit()

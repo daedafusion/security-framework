@@ -1,7 +1,8 @@
 package com.daedafusion.security.common.impl;
 
 import com.daedafusion.security.common.Context;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 
@@ -10,7 +11,7 @@ import java.util.*;
  */
 public class DefaultContext implements Context
 {
-    private static final Logger log = Logger.getLogger(DefaultContext.class);
+    private static final Logger log = LogManager.getLogger(DefaultContext.class);
 
     private Map<String, List<String>> context;
 

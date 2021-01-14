@@ -5,7 +5,8 @@ import com.daedafusion.security.common.Context;
 import com.daedafusion.security.obligation.Obligation;
 import com.daedafusion.security.obligation.ObligationHandler;
 import com.daedafusion.security.obligation.providers.ObligationHandlerProvider;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public class ObligationHandlerImpl extends AbstractService<ObligationHandlerProvider> implements ObligationHandler
 {
-    private static final Logger log = Logger.getLogger(ObligationHandlerImpl.class);
+    private static final Logger log = LogManager.getLogger(ObligationHandlerImpl.class);
 
     @Override
     public void handle(List<Obligation> obligations, Context context)

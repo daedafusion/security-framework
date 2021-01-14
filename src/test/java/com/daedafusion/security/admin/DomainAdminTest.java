@@ -11,7 +11,8 @@ import com.daedafusion.security.common.Domain;
 import com.daedafusion.security.exceptions.NotFoundException;
 import com.daedafusion.security.exceptions.UnauthorizedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.*;
  */
 public class DomainAdminTest
 {
-    private static final Logger log = Logger.getLogger(DomainAdminTest.class);
+    private static final Logger log = LogManager.getLogger(DomainAdminTest.class);
 
     ServiceRegistry mockRegistryPermit;
     ServiceRegistry mockRegistryDeny;

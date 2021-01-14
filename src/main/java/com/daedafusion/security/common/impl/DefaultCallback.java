@@ -1,7 +1,8 @@
 package com.daedafusion.security.common.impl;
 
 import com.daedafusion.security.common.Callback;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 /**
@@ -9,7 +10,7 @@ import org.apache.log4j.Logger;
  */
 public class DefaultCallback implements Callback
 {
-    private static final Logger log = Logger.getLogger(DefaultCallback.class);
+    private static final Logger log = LogManager.getLogger(DefaultCallback.class);
     private String name;
     private String value;
 

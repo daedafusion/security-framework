@@ -8,7 +8,8 @@ import com.daedafusion.sf.ServiceFrameworkException;
 import com.daedafusion.sf.ServiceFrameworkFactory;
 import com.daedafusion.security.authentication.Subject;
 import com.daedafusion.security.authentication.TokenExchange;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
@@ -25,7 +26,7 @@ import java.util.stream.StreamSupport;
  */
 public class AuthorizationTokenFilter implements Filter
 {
-    private static final Logger log = Logger.getLogger(AuthorizationTokenFilter.class);
+    private static final Logger log = LogManager.getLogger(AuthorizationTokenFilter.class);
 
     private ServiceFramework framework;
 

@@ -4,14 +4,15 @@ import com.daedafusion.sf.AbstractProvider;
 import com.daedafusion.security.common.Context;
 import com.daedafusion.security.obligation.Obligation;
 import com.daedafusion.security.obligation.providers.ObligationHandlerProvider;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by mphilpot on 7/14/14.
  */
 public class LoggingHandlerProvider extends AbstractProvider implements ObligationHandlerProvider
 {
-    private static final Logger log = Logger.getLogger(LoggingHandlerProvider.class);
+    private static final Logger log = LogManager.getLogger(LoggingHandlerProvider.class);
 
     @Override
     public boolean canHandle(Obligation obligation)

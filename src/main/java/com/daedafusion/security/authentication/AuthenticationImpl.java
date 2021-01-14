@@ -12,7 +12,8 @@ import com.daedafusion.security.exceptions.AccountLockedException;
 import com.daedafusion.security.exceptions.AuthenticationFailedException;
 import com.daedafusion.security.exceptions.PasswordQualityException;
 import com.daedafusion.security.exceptions.PasswordResetRequiredException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AuthenticationImpl extends AbstractService<AuthenticationProvider> implements Authentication
 {
-    private static final Logger log = Logger.getLogger(AuthenticationImpl.class);
+    private static final Logger log = LogManager.getLogger(AuthenticationImpl.class);
 
     private String combinerType; // unanimous, atLeastOne
 

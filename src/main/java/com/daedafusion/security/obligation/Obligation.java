@@ -1,6 +1,7 @@
 package com.daedafusion.security.obligation;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.Map;
  */
 public class Obligation
 {
-    private static final Logger log = Logger.getLogger(Obligation.class);
+    private static final Logger log = LogManager.getLogger(Obligation.class);
 
     // Common Obligation Types
     public static final String LOGGING = "obligation:logging";

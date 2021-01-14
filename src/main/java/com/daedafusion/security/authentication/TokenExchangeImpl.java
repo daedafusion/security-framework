@@ -3,7 +3,8 @@ package com.daedafusion.security.authentication;
 import com.daedafusion.sf.AbstractService;
 import com.daedafusion.security.authentication.providers.TokenExchangeProvider;
 import com.daedafusion.sf.LifecycleListener;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ import java.util.stream.Stream;
  */
 public class TokenExchangeImpl extends AbstractService<TokenExchangeProvider> implements TokenExchange
 {
-    private static final Logger log = Logger.getLogger(TokenExchangeImpl.class);
+    private static final Logger log = LogManager.getLogger(TokenExchangeImpl.class);
 
     @Override
     public Subject exchange(Token... tokens)

@@ -6,7 +6,8 @@ import com.daedafusion.security.common.Context;
 import com.daedafusion.security.decision.Decision;
 import com.daedafusion.security.obligation.Obligation;
 import com.daedafusion.sf.AbstractProvider;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URI;
 
@@ -15,7 +16,7 @@ import java.net.URI;
  */
 public class AlwaysPermitAuthorizationProvider extends AbstractProvider implements AuthorizationProvider
 {
-    private static final Logger log = Logger.getLogger(AlwaysPermitAuthorizationProvider.class);
+    private static final Logger log = LogManager.getLogger(AlwaysPermitAuthorizationProvider.class);
 
     @Override
     public Decision getAccessDecision(Subject subject, URI resource, String action, Context context)

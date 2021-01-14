@@ -11,7 +11,8 @@ import com.daedafusion.security.decision.Decision;
 import com.daedafusion.security.obligation.Obligation;
 import com.daedafusion.security.obligation.ObligationHandler;
 import com.daedafusion.security.obligation.impl.ObligationHandlerImpl;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.*;
  */
 public class AuthorizationTest
 {
-    private static final Logger log = Logger.getLogger(AuthorizationTest.class);
+    private static final Logger log = LogManager.getLogger(AuthorizationTest.class);
 
     ServiceRegistry       mockRegistry;
     AuthorizationProvider mockProvider;

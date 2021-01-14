@@ -1,6 +1,7 @@
 package com.daedafusion.security.common;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +10,7 @@ import java.util.Set;
 
 public class Capability
 {
-    private static final Logger log = Logger.getLogger(Capability.class);
+    private static final Logger log = LogManager.getLogger(Capability.class);
 
     private String capability;
     private String description;

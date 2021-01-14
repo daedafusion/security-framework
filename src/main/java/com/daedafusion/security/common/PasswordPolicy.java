@@ -1,13 +1,14 @@
 package com.daedafusion.security.common;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by mphilpot on 7/25/14.
  */
 public class PasswordPolicy
 {
-    private static final Logger log = Logger.getLogger(PasswordPolicy.class);
+    private static final Logger log = LogManager.getLogger(PasswordPolicy.class);
 
     private Boolean enabled;
     private Boolean mustChange;

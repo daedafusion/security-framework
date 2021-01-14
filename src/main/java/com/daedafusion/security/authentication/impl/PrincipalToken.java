@@ -1,7 +1,8 @@
 package com.daedafusion.security.authentication.impl;
 
 import com.daedafusion.security.authentication.Token;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
  */
 public class PrincipalToken implements Token
 {
-    private static final Logger log = Logger.getLogger(PrincipalToken.class);
+    private static final Logger log = LogManager.getLogger(PrincipalToken.class);
 
     private final String tokenString;
     private final String authority;

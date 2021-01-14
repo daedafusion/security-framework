@@ -4,14 +4,15 @@ import com.daedafusion.sf.AbstractService;
 import com.daedafusion.security.authentication.Subject;
 import com.daedafusion.security.identity.SubjectInspector;
 import com.daedafusion.security.identity.providers.SubjectInspectorProvider;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by mphilpot on 8/27/14.
  */
 public class SubjectInspectorImpl extends AbstractService<SubjectInspectorProvider> implements SubjectInspector
 {
-    private static final Logger log = Logger.getLogger(SubjectInspectorImpl.class);
+    private static final Logger log = LogManager.getLogger(SubjectInspectorImpl.class);
 
     @Override
     public String getFullyQualifiedUsername(Subject subject)

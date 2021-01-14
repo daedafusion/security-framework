@@ -9,7 +9,8 @@ import com.daedafusion.security.authorization.Authorization;
 import com.daedafusion.security.common.Context;
 import com.daedafusion.security.common.impl.DefaultContext;
 import com.daedafusion.security.exceptions.UnauthorizedException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class AuditAdminImpl extends AbstractService<AuditAdminProvider> implements AuditAdmin
 {
-    private static final Logger log = Logger.getLogger(AuditAdminImpl.class);
+    private static final Logger log = LogManager.getLogger(AuditAdminImpl.class);
 
     @Override
     public List<AuditEvent> getEvents(Subject subject, long after, long before, int limit) throws UnauthorizedException

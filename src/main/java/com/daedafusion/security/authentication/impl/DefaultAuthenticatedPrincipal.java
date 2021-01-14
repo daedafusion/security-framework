@@ -2,7 +2,8 @@ package com.daedafusion.security.authentication.impl;
 
 import com.daedafusion.security.authentication.AuthenticatedPrincipal;
 import com.daedafusion.security.authentication.Principal;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.function.BooleanSupplier;
@@ -12,7 +13,7 @@ import java.util.function.BooleanSupplier;
  */
 public class DefaultAuthenticatedPrincipal extends AbstractPrincipal implements AuthenticatedPrincipal
 {
-    private static final Logger log = Logger.getLogger(DefaultAuthenticatedPrincipal.class);
+    private static final Logger log = LogManager.getLogger(DefaultAuthenticatedPrincipal.class);
 
     private Set<Principal> associations;
     private Map<String, String> context;
