@@ -1,7 +1,8 @@
 package com.daedafusion.security.decision;
 
 import com.daedafusion.security.obligation.Obligation;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class Decision
 {
-    private static final Logger log = Logger.getLogger(Decision.class);
+    private static final Logger log = LogManager.getLogger(Decision.class);
 
     public enum Result { PERMIT, DENY, ABSTAIN }
 

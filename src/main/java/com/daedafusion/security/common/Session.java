@@ -1,6 +1,7 @@
 package com.daedafusion.security.common;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.UUID;
 
@@ -9,7 +10,7 @@ import java.util.UUID;
  */
 public class Session
 {
-    private static final Logger log = Logger.getLogger(Session.class);
+    private static final Logger log = LogManager.getLogger(Session.class);
 
     private String id;
     private String user;

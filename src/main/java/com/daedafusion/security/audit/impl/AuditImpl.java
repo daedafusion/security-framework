@@ -4,14 +4,15 @@ import com.daedafusion.sf.AbstractService;
 import com.daedafusion.security.audit.Audit;
 import com.daedafusion.security.audit.AuditEvent;
 import com.daedafusion.security.audit.providers.AuditProvider;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Created by mphilpot on 8/12/14.
  */
 public class AuditImpl extends AbstractService<AuditProvider> implements Audit
 {
-    private static final Logger log = Logger.getLogger(AuditImpl.class);
+    private static final Logger log = LogManager.getLogger(AuditImpl.class);
 
     @Override
     public void reportEvent(AuditEvent event)

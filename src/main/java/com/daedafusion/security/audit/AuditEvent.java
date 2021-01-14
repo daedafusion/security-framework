@@ -1,6 +1,7 @@
 package com.daedafusion.security.audit;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.Map;
  */
 public class AuditEvent
 {
-    private static final Logger log = Logger.getLogger(AuditEvent.class);
+    private static final Logger log = LogManager.getLogger(AuditEvent.class);
 
     public enum Severity { INFO, SUCCESS, FAILURE }
 

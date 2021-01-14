@@ -1,6 +1,7 @@
 package com.daedafusion.security.common;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.Set;
 
 public class Domain
 {
-    private static final Logger log = Logger.getLogger(Domain.class);
+    private static final Logger log = LogManager.getLogger(Domain.class);
 
     private String domain;
     private String description;

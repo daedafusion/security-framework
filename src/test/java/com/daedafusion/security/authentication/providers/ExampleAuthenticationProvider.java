@@ -15,7 +15,8 @@ import com.daedafusion.security.common.Callback;
 import com.daedafusion.security.common.CallbackHandler;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ExampleAuthenticationProvider extends AbstractProvider implements AuthenticationProvider
 {
-    private static final Logger log = Logger.getLogger(ExampleAuthenticationProvider.class);
+    private static final Logger log = LogManager.getLogger(ExampleAuthenticationProvider.class);
 
     private Map<UUID, SharedAuthenticationState> sessions;
     private KeyPair keyPair;

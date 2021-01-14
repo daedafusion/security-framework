@@ -12,7 +12,8 @@ import com.daedafusion.security.decision.impl.UnanimousResultCombiner;
 import com.daedafusion.security.obligation.Obligation;
 import com.daedafusion.security.obligation.ObligationHandler;
 import com.daedafusion.sf.LifecycleListener;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
  */
 public class UnanimousResultAuthorizationImpl extends AbstractService<AuthorizationProvider> implements Authorization
 {
-    private static final Logger log = Logger.getLogger(UnanimousResultAuthorizationImpl.class);
+    private static final Logger log = LogManager.getLogger(UnanimousResultAuthorizationImpl.class);
 
     private Set<AuthorizationProvider> enabledProviders;
 

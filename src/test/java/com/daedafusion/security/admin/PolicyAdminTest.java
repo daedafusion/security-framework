@@ -11,7 +11,8 @@ import com.daedafusion.security.common.LockoutPolicy;
 import com.daedafusion.security.common.PasswordPolicy;
 import com.daedafusion.security.exceptions.UnauthorizedException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.when;
  */
 public class PolicyAdminTest
 {
-    private static final Logger log = Logger.getLogger(PolicyAdminTest.class);
+    private static final Logger log = LogManager.getLogger(PolicyAdminTest.class);
 
     ServiceRegistry mockRegistryPermit;
     ServiceRegistry mockRegistryDeny;

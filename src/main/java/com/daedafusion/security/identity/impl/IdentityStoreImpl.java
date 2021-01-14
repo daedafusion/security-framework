@@ -10,7 +10,8 @@ import com.daedafusion.security.common.impl.DefaultContext;
 import com.daedafusion.security.exceptions.UnauthorizedException;
 import com.daedafusion.security.identity.IdentityStore;
 import com.daedafusion.security.identity.providers.IdentityStoreProvider;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.Map;
  */
 public class IdentityStoreImpl extends AbstractService<IdentityStoreProvider> implements IdentityStore
 {
-    private static final Logger log = Logger.getLogger(IdentityStoreImpl.class);
+    private static final Logger log = LogManager.getLogger(IdentityStoreImpl.class);
 
     @Override
     public Identity getIdentity(Subject subject)

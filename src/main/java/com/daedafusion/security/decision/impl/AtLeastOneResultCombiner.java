@@ -2,7 +2,8 @@ package com.daedafusion.security.decision.impl;
 
 import com.daedafusion.security.decision.Combiner;
 import com.daedafusion.security.decision.Decision;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.UUID;
  */
 public class AtLeastOneResultCombiner implements Combiner<Decision>
 {
-    private static final Logger log = Logger.getLogger(AtLeastOneResultCombiner.class);
+    private static final Logger log = LogManager.getLogger(AtLeastOneResultCombiner.class);
 
     @Override
     public Decision getCombinedResult(List<Decision> decisions)

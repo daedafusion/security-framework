@@ -10,7 +10,8 @@ import com.daedafusion.security.common.Session;
 import com.daedafusion.security.common.impl.DefaultContext;
 import com.daedafusion.security.exceptions.NotFoundException;
 import com.daedafusion.security.exceptions.UnauthorizedException;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class SessionAdminImpl extends AbstractService<SessionAdminProvider> implements SessionAdmin
 {
-    private static final Logger log = Logger.getLogger(SessionAdminImpl.class);
+    private static final Logger log = LogManager.getLogger(SessionAdminImpl.class);
 
     @Override
     public List<Session> getSessions(Subject subject) throws NotFoundException, UnauthorizedException
